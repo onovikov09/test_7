@@ -13,7 +13,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="site-login">
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <p>Please fill out the following fields to login:</p>
+    <p>Please fill out the following field to login:</p>
 
     <?php $form = ActiveForm::begin([
         'id' => 'login-form',
@@ -39,6 +39,6 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php ActiveForm::end(); ?>
 
     <div class="col-lg-offset-1" style="color:#999;">
-        Если у вас нет аккаунта, он будет создан автоматически
+        If you do not have an account, it will be available automatically
     </div>
 </div>
