@@ -12,7 +12,7 @@ $this->title = 'Send money. You balance = ';
 ?>
 <div class="user-index">
 
-    <h1><?= Html::encode($this->title) . '<span class="balance">' . $oCurrentUser->real_balance . '</span>$' ?></h1>
+    <h1><?= Html::encode($this->title) . '<span class="balance">' . $oCurrentUser->real_balance . '</span>' ?></h1>
 
     <div>
         <div class="control-transfer" style="width: 70%;">
@@ -118,7 +118,7 @@ CSS;
                     jSelect2.select2('val', '[]');
                     jMoney.val(0);
                     
-                    $('.balance').text(response.balance);     
+                    $('.balance').text(response.balance);
                 }
                 
                 $('.modal-body').html(response.message);

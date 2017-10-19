@@ -17,7 +17,6 @@ $this->title = 'History of money transfers';
         'columns' => [
             [
                 'attribute' => 'From user',
-                'format' => 'raw',
                 'value' => function ($model) use ($nUserId) {
                     if ($model->from_user == $nUserId) {
                         return 'I am to';
@@ -27,7 +26,6 @@ $this->title = 'History of money transfers';
             ],
             [
                 'attribute' => 'To user',
-                'format' => 'raw',
                 'value' => function ($model) use ($nUserId) {
                     if ($model->to_user == $nUserId) {
                         return 'To me';
@@ -37,7 +35,6 @@ $this->title = 'History of money transfers';
             ],
             [
                 'attribute' => 'Money',
-                'format' => 'raw',
                 'value' => function ($model) use ($nUserId)
                 {
                     return (($model->from_user == $nUserId) ? '-' : '+' ) . $model->real_money;
@@ -45,7 +42,6 @@ $this->title = 'History of money transfers';
             ],
             [
                 'attribute' => 'Date send',
-                'format' => 'raw',
                 'value' => function ($model) {
                     return date("d.m.Y H:i:s", $model->dt);
                 },

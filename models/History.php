@@ -60,6 +60,10 @@ class History extends \yii\db\ActiveRecord
 
     public function getReal_money()
     {
-        return $this->value / 100;
+        if (!$this->value) {
+            return '0.00$';
+        }
+
+        return number_format(($this->value / 100), 2) . '$';
     }
 }

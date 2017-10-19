@@ -16,7 +16,12 @@ $this->title = 'Users list';
         'dataProvider' => $dataProvider,
         'columns' => [
             'nickname',
-            'real_balance',
+            [
+                'attribute' => 'balance',
+                'value' => function ($model) {
+                    return $model->real_balance;
+                },
+            ],
         ],
     ]); ?>
 

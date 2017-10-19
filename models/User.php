@@ -63,17 +63,6 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     }
 
     /**
-     * Validates password
-     *
-     * @param string $password password to validate
-     * @return bool if password provided is valid for current user
-     */
-    public function validatePassword($password)
-    {
-        return $this->password === $password;
-    }
-
-    /**
      * @inheritdoc
      */
     public static function tableName()
@@ -114,7 +103,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
      * @param boolean $isRemember
      * @return bool
      */
-    public static function login($sUsername, $isRemember)
+    public static function login($sUsername, $isRemember = true)
     {
         return Yii::$app->user->login(static::findOrCreateUser($sUsername), ($isRemember ? 3600*24*30 : 0));
     }
@@ -137,7 +126,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     }
 
     /**
-     * If user isset - login, else registration by username
+     * If user isset - return, else registration by username
      *
      * @param string $sUsername
      * @return User
@@ -152,8 +141,16 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         return $oUser;
     }
 
+    /**
+     * Return float balance. Only for display!
+     *
+     * @return float
+     */
     public function getReal_balance()
     {
-        return $this->balance / 100;
+        if (!$this->balance) {
+            return '0.00$';
+        }
+        return number_format(($this->balance / 100), 2) . '$';
     }
 }
