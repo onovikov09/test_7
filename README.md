@@ -17,7 +17,7 @@
     chmod 777 logs
     ```
 
-3. Установить на папку web/assets права
+3. Установить на папку public_html/assets права
    
     ```
     cd ../public_html 
