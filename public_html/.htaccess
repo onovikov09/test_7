@@ -1,0 +1,12 @@
+RewriteEngine on
+
+# if request uri has no dots (path-like), force trailing slash
+RewriteCond %{REQUEST_URI} !\.
+RewriteRule ^(.*[^/])$ http://%{HTTP_HOST}/$1/ [L,R=301,QSA]
+
+# if a directory or a file exists, use it directly
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# otherwise forward it to index.php
+RewriteRule . /index.php
