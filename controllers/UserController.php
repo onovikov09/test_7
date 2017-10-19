@@ -69,17 +69,13 @@ class UserController extends Controller
         $nMoney = abs(floatval(str_replace('$', '', $nMoney)) * 100);
 
         $aUsersName = Yii::$app->request->post('nickname', []);
-        if (empty($aUsersName) || !$nMoney)
-        {
-            if (empty($aUsersName)) {
-                $aErrors[] = ['nickname' => ['Specify nickname!']];
-            }
 
-            if (!$nMoney) {
-                $aErrors[] = ['money' => ['Specify amount of transfer!']];
-            }
+        if (empty($aUsersName)) {
+            return $this->json(false, ['message' => 'Specify nickname!']);
+        }
 
-            return $this->json(false, ['errors' => $aErrors]);
+        if (!$nMoney) {
+            return $this->json(false, ['message' => 'Specify amount of transfer!']);
         }
 
         $oFromUser = Yii::$app->user->getIdentity();
@@ -91,7 +87,7 @@ class UserController extends Controller
         }
 
         if (empty($aUsersName)) {
-            return $this->json(false, ['errors' => ['nickname' => ['You can not send money to yourself!']]]);
+            return $this->json(false, ['message' => 'You can not send money to yourself!']);
         }
 
         foreach ($aUsersName as $sUserName)

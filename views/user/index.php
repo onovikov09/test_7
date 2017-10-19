@@ -88,13 +88,13 @@ CSS;
         
         $('.control-transfer').removeClass('has-error');
         
-        if ( !jSelect2.select2('val') || !jMoney.val()) {
+        if ( !jSelect2.select2('val') || !jMoney.val() || '$ 0.00' == jMoney.val()) {
             
             if (!jSelect2.select2('val')) {
                 jSelect2.closest('.control-transfer').addClass('has-error');
             }
             
-            if (!jMoney.val()) {
+            if (!jMoney.val() || '$ 0.00' == jMoney.val()) {
                 jMoney.closest('.control-transfer').addClass('has-error');
             }
             return false;
