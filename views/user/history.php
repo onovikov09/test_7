@@ -17,8 +17,8 @@ $this->title = 'History of money transfers';
         'columns' => [
             [
                 'attribute' => 'From user',
-                'value' => function ($model) use ($nUserId) {
-                    if ($model->from_user == $nUserId) {
+                'value' => function ($model) use ($user_id) {
+                    if ($model->from_user == $user_id) {
                         return 'I am to';
                     }
                     return $model->user_from->nickname;
@@ -26,8 +26,8 @@ $this->title = 'History of money transfers';
             ],
             [
                 'attribute' => 'To user',
-                'value' => function ($model) use ($nUserId) {
-                    if ($model->to_user == $nUserId) {
+                'value' => function ($model) use ($user_id) {
+                    if ($model->to_user == $user_id) {
                         return 'To me';
                     }
                     return $model->user_to->nickname;
@@ -35,9 +35,9 @@ $this->title = 'History of money transfers';
             ],
             [
                 'attribute' => 'Money',
-                'value' => function ($model) use ($nUserId)
+                'value' => function ($model) use ($user_id)
                 {
-                    return (($model->from_user == $nUserId) ? '-' : '+' ) . $model->real_money;
+                    return (($model->from_user == $user_id) ? '-' : '+' ) . $model->real_money;
                 },
             ],
             [

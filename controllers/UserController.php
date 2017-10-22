@@ -47,12 +47,12 @@ class UserController extends Controller
      */
     public function actionMoney()
     {
-        $oCurrentUser = Yii::$app->user->getIdentity();
-        $oUsers = User::find()->select('nickname')->where(['NOT IN', 'id', [$oCurrentUser->getId()]])->all();
+        $current_user = Yii::$app->user->getIdentity();
+        $users = User::find()->select('nickname')->where(['NOT IN', 'id', [$current_user->getId()]])->all();
 
         return $this->render('index', [
-            'aUsers' => ArrayHelper::map($oUsers, 'nickname', 'nickname'),
-            'oCurrentUser' => $oCurrentUser
+            'users' => ArrayHelper::map($users, 'nickname', 'nickname'),
+            'current_user' => $current_user
         ]);
     }
 
@@ -63,66 +63,66 @@ class UserController extends Controller
      */
     public function actionSend()
     {
-        $aNewNickname = []; $isHasError = false;
+        $new_nicknames = []; $has_error = false;
 
-        $nMoney = Yii::$app->request->post('money', 0);
-        $nMoney = abs(floatval(str_replace('$', '', $nMoney)) * 100);
+        $money = Yii::$app->request->post('money', 0);
+        $money = abs(floatval(str_replace('$', '', $money)) * 100);
 
-        $aUsersName = Yii::$app->request->post('nickname', []);
+        $nicknames = Yii::$app->request->post('nickname', []);
 
-        if (empty($aUsersName)) {
+        if (empty($nicknames)) {
             return $this->json(false, ['message' => 'Specify nickname!']);
         }
 
-        if (!$nMoney) {
+        if (!$money) {
             return $this->json(false, ['message' => 'Specify amount of transfer!']);
         }
 
-        $oFromUser = Yii::$app->user->getIdentity();
+        $current_user = Yii::$app->user->getIdentity();
 
-        if (in_array($oFromUser->nickname, $aUsersName)) {
-            $aUsersName = array_filter($aUsersName, function($sValue) use ($oFromUser){
-                return $sValue != $oFromUser->nickname;
+        if (in_array($current_user->nickname, $nicknames)) {
+            $nicknames = array_filter($nicknames, function($value) use ($current_user){
+                return $value != $current_user->nickname;
             });
         }
 
-        if (empty($aUsersName)) {
+        if (empty($nicknames)) {
             return $this->json(false, ['message' => 'You can not send money to yourself!']);
         }
 
-        foreach ($aUsersName as $sUserName)
+        foreach ($nicknames as $username)
         {
-            $oFromUser->balance -= $nMoney;
-            $oToUser = User::findOrCreateUser($sUserName);
-            $oToUser->balance += $nMoney;
-            if ($oToUser->isNew) {
-                $aNewNickname[] = $sUserName;
+            $current_user->balance -= $money;
+            $to_user = User::findOrCreateUser($username);
+            $to_user->balance += $money;
+            if ($to_user->isNew) {
+                $new_nicknames[] = $username;
             }
 
-            $oHistory = new History();
-            $oHistory->to_user = $oToUser->id;
-            $oHistory->from_user = $oFromUser->id;
-            $oHistory->dt = time();
-            $oHistory->value = $nMoney;
+            $history = new History();
+            $history->to_user = $to_user->id;
+            $history->dt = time();
+            $history->value = $money;
+            $history->link('user_from', $current_user);
 
-            if ($oFromUser->validate() && $oToUser->validate() && $oHistory->validate())
+            if ($current_user->validate() && $to_user->validate() && $history->validate())
             {
-                $oFromUser->save(false);
-                $oToUser->save(false);
-                $oHistory->save(false);
+                $current_user->save(false);
+                $to_user->save(false);
+                $history->save(false);
 
             } else {
-                $isHasError = true;
+                $has_error = true;
             }
         }
 
-        if (!$isHasError)
+        if (!$has_error)
         {
             return $this->json(true,
                 [
-                    'message' => 'You sent ' . $nMoney / 100 . '$ to ' . implode(', ', $aUsersName),
-                    'added_nickname' => $aNewNickname,
-                    'balance' => $oFromUser->real_balance
+                    'message' => 'You sent ' . $money / 100 . '$ to ' . implode(', ', $nicknames),
+                    'added_nickname' => $new_nicknames,
+                    'balance' => $current_user->real_balance
                 ]);
         }
 
@@ -136,16 +136,16 @@ class UserController extends Controller
      */
     public function actionHistory()
     {
-        $nUserId = Yii::$app->user->getIdentity()->getId();
+        $user_id = Yii::$app->user->getIdentity()->getId();
 
         $dataProvider = new ActiveDataProvider([
-            'query' => History::find()->where(['from_user' => $nUserId])->orWhere(['to_user' => $nUserId])
+            'query' => History::find()->where(['from_user' => $user_id])->orWhere(['to_user' => $user_id])
                 ->with(['user_from','user_to']),
         ]);
 
         return $this->render('history', [
             'dataProvider' => $dataProvider,
-            'nUserId' => $nUserId
+            'user_id' => $user_id
         ]);
     }
 }

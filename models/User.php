@@ -99,46 +99,46 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     /**
      * Login user be username
      *
-     * @param string $sUsername
-     * @param boolean $isRemember
+     * @param string $username
+     * @param boolean $remember
      * @return bool
      */
-    public static function login($sUsername, $isRemember = true)
+    public static function login($username, $remember = true)
     {
-        return Yii::$app->user->login(static::findOrCreateUser($sUsername), ($isRemember ? 3600*24*30 : 0));
+        return Yii::$app->user->login(static::findOrCreateUser($username), ($remember ? 3600*24*30 : 0));
     }
 
     /**
      * Create new user
      *
-     * @param string $sUsername
+     * @param string $username
      * @return User
      */
-    public static function getNewUser($sUsername)
+    public static function getNewUser($username)
     {
-        $oUser = new static();
-        $oUser->nickname = $sUsername;
-        $oUser->isNew = true;
-        if ($oUser->validate()) {
-            $oUser->save(false);
+        $user = new static();
+        $user->nickname = $username;
+        $user->isNew = true;
+        if ($user->validate()) {
+            $user->save(false);
         }
-        return $oUser;
+        return $user;
     }
 
     /**
      * If user isset - return, else registration by username
      *
-     * @param string $sUsername
+     * @param string $username
      * @return User
      */
-    public static function findOrCreateUser($sUsername)
+    public static function findOrCreateUser($username)
     {
-        $oUser = static::findByUsername($sUsername);
-        if(empty($oUser))
+        $user = static::findByUsername($username);
+        if(empty($user))
         {
-            $oUser = static::getNewUser($sUsername);
+            $user = static::getNewUser($username);
         }
-        return $oUser;
+        return $user;
     }
 
     /**

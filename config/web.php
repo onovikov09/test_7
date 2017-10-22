@@ -45,6 +45,10 @@ $config = [
             'rules' => [
             ],
         ],
+        'assetManager' => [
+            'class' => 'yii\web\AssetManager',
+            'appendTimestamp' => true,
+        ],
     ],
     'params' => $params,
 ];

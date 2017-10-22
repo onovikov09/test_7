@@ -113,3 +113,12 @@ a.desc:after {
 .nav > li > form > button.logout:focus {
     outline: none;
 }
+
+.control-transfer {
+    display: inline-block;
+    vertical-align: top;
+    margin: 15px 0 0 0;
+}
+.modal-body{
+    font-size: 20px;
+}
