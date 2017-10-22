@@ -107,9 +107,23 @@ class UserController extends Controller
 
             if ($current_user->validate() && $to_user->validate() && $history->validate())
             {
-                $current_user->save(false);
-                $to_user->save(false);
-                $history->save(false);
+                $db = Yii::$app->db;
+                $transaction = $db->beginTransaction();
+
+                try {
+
+                    $current_user->save(false);
+                    $to_user->save(false);
+                    $history->save(false);
+
+                    $transaction->commit();
+                } catch(\Exception $e) {
+                    $transaction->rollBack();
+                    $has_error = true;
+                } catch(\Throwable $e) {
+                    $transaction->rollBack();
+                    $has_error = true;
+                }
 
             } else {
                 $has_error = true;
