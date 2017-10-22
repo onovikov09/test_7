@@ -6,32 +6,53 @@ class m171019_195602_init_tables extends Migration
 {
     public function safeUp()
     {
-        $sSql = <<<SQL
+        $this->createTable('user', [
+            'id' => $this->primaryKey(),
+            'nickname' => $this->string(255)->notNull()->unique(),
+            'balance' => $this->integer(11)->notNull()->defaultValue(0),
+            'is_active' =>  $this->smallInteger()->notNull()->defaultValue(1),
+        ]);
 
-CREATE TABLE `user` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `nickname` varchar(255) NOT NULL,
-  `balance` int(11) NOT NULL DEFAULT '0',
-  `is_active` tinyint(4) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `nickname` (`nickname`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+        $this->createTable('history', [
+            'id' => $this->primaryKey(),
+            'from_user' => $this->integer(11)->notNull(),
+            'to_user' => $this->integer(11)->notNull(),
+            'value' => $this->integer(11)->notNull(),
+            'dt' =>  $this->integer(11)->notNull(),
+        ]);
 
-CREATE TABLE `history` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `from_user` int(11) NOT NULL,
-  `to_user` int(11) NOT NULL,
-  `value` int(11) NOT NULL,
-  `dt` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+        $this->addForeignKey(
+            'fk-history-from_user',
+            'history',
+            'from_user',
+            'user',
+            'id',
+            'CASCADE'
+        );
 
-SQL;
-        $this->execute($sSql);
+        $this->addForeignKey(
+            'fk-history-to_user',
+            'history',
+            'to_user',
+            'user',
+            'id',
+            'CASCADE'
+        );
     }
 
     public function safeDown()
     {
-        $this->execute('DROP TABLE `history`; DROP TABLE `user`;');
+        $this->dropForeignKey(
+            'fk-history-from_user',
+            'history'
+        );
+
+        $this->dropForeignKey(
+            'fk-history-to_user',
+            'history'
+        );
+
+        $this->dropTable('history');
+        $this->dropTable('user');
     }
 }
