@@ -6,10 +6,10 @@ class UserTest extends \Codeception\Test\Unit
 {
     public function testFindUserById()
     {
-        expect_that($oUser = User::findIdentity(2));
-        expect($oUser->nickname)->equals('demo');
+        expect_that($user = User::findIdentity(1));
+        expect($user->nickname)->equals('demo');
 
-        expect_not(User::findIdentity(1));
+        expect_not(User::findIdentity(999));
     }
 
     public function testFindUserByUsername()
@@ -17,19 +17,6 @@ class UserTest extends \Codeception\Test\Unit
         expect_that(User::findByUsername('demo'));
         expect_not(User::findByUsername('not-demo'));
     }
-
-    /**
-     * @depends testFindUserByUsername
-     */
-    /*public function testValidateUser($user)
-    {
-        $user = User::findByUsername('demo');
-        expect_that($user->validateAuthKey('test100key'));
-        expect_not($user->validateAuthKey('test102key'));
-
-        expect_that($user->validatePassword('admin'));
-        expect_not($user->validatePassword('123456'));        
-    }*/
 
     public function testLogin()
     {
@@ -39,10 +26,10 @@ class UserTest extends \Codeception\Test\Unit
 
     public function testGetNewUser()
     {
-        $sUserName = 'demo_' . rand(1111, 9999);
-        $oUser = User::getNewUser($sUserName);
-        expect_that($oUser);
-        expect($oUser->nickname)->equals($sUserName);
+        $username = 'demo_' . rand(1111, 9999);
+        $user = User::getNewUser($username);
+        expect_that($user);
+        expect($user->nickname)->equals($username);
     }
 
     /**
@@ -51,10 +38,10 @@ class UserTest extends \Codeception\Test\Unit
      */
     public function testFindOrCreateUser()
     {
-        $sUserName = 'demo_' . rand(1111, 9999);
-        $oUser = User::findOrCreateUser($sUserName);
-        expect_that($oUser);
-        expect($oUser->nickname)->equals($sUserName);
+        $username = 'demo_' . rand(1111, 9999);
+        $user = User::findOrCreateUser($username);
+        expect_that($user);
+        expect($user->nickname)->equals($username);
     }
 
     /**
@@ -63,20 +50,20 @@ class UserTest extends \Codeception\Test\Unit
      */
     public function testRealBalance()
     {
-        $oUser = User::findOrCreateUser('demo');
-        expect_that($oUser);
+        $user = User::findOrCreateUser('demo');
+        expect_that($user);
 
-        $oUser->balance = 155;
-        expect($oUser->real_balance)->equals('1.55$');
+        $user->balance = 155;
+        expect($user->real_balance)->equals('1.55$');
 
-        $oUser->balance = 0;
-        expect($oUser->real_balance)->equals('0.00$');
+        $user->balance = 0;
+        expect($user->real_balance)->equals('0.00$');
 
-        $oUser->balance = 500;
-        expect($oUser->real_balance)->equals('5.00$');
+        $user->balance = 500;
+        expect($user->real_balance)->equals('5.00$');
 
-        $oUser->balance = -555;
-        expect($oUser->real_balance)->equals('-5.55$');
+        $user->balance = -555;
+        expect($user->real_balance)->equals('-5.55$');
     }
 
 }
