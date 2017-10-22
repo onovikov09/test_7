@@ -2,7 +2,7 @@ $(document).on('click', '.js_send', function(e) {
 
     var jSelect2 = $("[name='user_to[]']"),
         jMoney = $('[name="money"]'),
-        jsOption, sErrors = '';
+        jsOption;
 
     $('.control-transfer').removeClass('has-error');
 
